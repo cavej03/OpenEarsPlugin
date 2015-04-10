@@ -24,7 +24,8 @@
       window.languages = {};
       languages["directions"] = {};
       languages["directions"].name = "Directions";
-      languages["directions"].csv = "BACKWARD,CHANGE,FORWARD,GO,LEFT,MODEL,RIGHT,TURN";
+      // languages["directions"].csv = "BACKWARD,CHANGE,FORWARD,GO,LEFT,MODEL,RIGHT,TURN";
+      languages["directions"].csv = "Archive,flag,quick,delete,reply,next";
       languages["directions"].paths = {};
       Ears.generateLanguageModel(languages["directions"].name, languages["directions"].csv);
       $(document).on("generateLanguageModel", function(evt) {

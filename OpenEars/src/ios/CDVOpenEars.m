@@ -2,7 +2,6 @@
 
 @implementation CDVOpenEars
 
-@synthesize audio_session_manager;
 @synthesize pocket_sphinx_controller;
 @synthesize openears_events_observer;
 @synthesize language_model_generator;
@@ -16,33 +15,27 @@
 @synthesize path_to_dynamic_grammar;
 
 // Lazy Allocations
--(AudioSessionManager *) audio_session_manager{
-    if (audio_session_manager == nil){
-        audio_session_manager = [[AudioSessionManager alloc] init];
-    }
-    return audio_session_manager;
-}
--(PocketsphinxController *) pocket_sphinx_controller{
+-(OEPocketsphinxController *) pocket_sphinx_controller{
     if (pocket_sphinx_controller == nil){
-        pocket_sphinx_controller = [[PocketsphinxController alloc] init];
+        pocket_sphinx_controller = [OEPocketsphinxController sharedInstance];
     }
     return pocket_sphinx_controller;
 }
--(OpenEarsEventsObserver *) openears_events_observer{
+-(OEEventsObserver *) openears_events_observer{
     if (openears_events_observer == nil){
-        openears_events_observer = [[OpenEarsEventsObserver alloc] init];
+        openears_events_observer = [[OEEventsObserver alloc] init];
     }
     return openears_events_observer;
 }
--(LanguageModelGenerator *) language_model_generator{
+-(OELanguageModelGenerator *) language_model_generator{
     if (language_model_generator == nil){
-        language_model_generator = [[LanguageModelGenerator alloc] init];
+        language_model_generator = [[OELanguageModelGenerator alloc] init];
     }
     return language_model_generator;
 }
--(FliteController *) flite_controller{
+-(OEFliteController *) flite_controller{
     if (flite_controller == nil){
-        flite_controller = [[FliteController alloc] init];
+        flite_controller = [[OEFliteController alloc] init];
     }
     return flite_controller;
 }
@@ -53,13 +46,11 @@
 	return slt;
 }
 
-
-
 /*
  *  AudioSessionManager methods
-	Start
-		args: "AcousticModelEnglish" or "AcousticModelSpanish"
-		returns status OK
+    Start
+        args: "AcousticModelEnglish" or "AcousticModelSpanish"
+        returns status OK
  */
 -(void)startAudioSession:(CDVInvokedUrlCommand*)command{
     // Default to "AcousticModelEnglish", will also accept "AcousticModelSpanish" or any others that may be added.
@@ -70,15 +61,14 @@
     if(acoustic_model_name == nil){
         acoustic_model_name = @"AcousticModelEnglish";
     }
-	
-    [self.audio_session_manager startAudioSession];
+    
+    // [self.audio_session_manager startAudioSession];
     [self.openears_events_observer setDelegate:self];
-    self.acoustic_model = [AcousticModel pathToModel:acoustic_model_name];
+    self.acoustic_model = [OEAcousticModel pathToModel:acoustic_model_name];
     
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
-
 
 
 /*
@@ -109,13 +99,13 @@
 			};
  */
 -(void)generateLanguageModel:(CDVInvokedUrlCommand*)command{	
-    NSString *languageName = [command.arguments objectAtIndex:0];	
+    NSString *languageName = [command.arguments objectAtIndex:0];
     NSString *languageCSV = [command.arguments objectAtIndex:1];
     NSArray *languageArray = [languageCSV componentsSeparatedByString:@","];
     
     NSError *error = [self.language_model_generator generateLanguageModelFromArray:languageArray withFilesNamed:languageName forAcousticModelAtPath:self.acoustic_model];
-    
-    NSDictionary *dynamicLanguageGenerationResultsDictionary = nil;
+
+    // NSDictionary *dynamicLanguageGenerationResultsDictionary = nil;
     
     if([error code] != noErr) {
         NSString* errorMessage = [NSString stringWithFormat:@"Dynamic language generator reported error: %@", [error description]];
@@ -124,15 +114,18 @@
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         
     } else {
-		dynamicLanguageGenerationResultsDictionary = [error userInfo];
+		// dynamicLanguageGenerationResultsDictionary = [error userInfo];
         
-        NSString *lmFile = [dynamicLanguageGenerationResultsDictionary objectForKey:@"LMFile"];
-		NSString *dictionaryFile = [dynamicLanguageGenerationResultsDictionary objectForKey:@"DictionaryFile"];
-		NSString *lmPath = [dynamicLanguageGenerationResultsDictionary objectForKey:@"LMPath"];
-		NSString *dictionaryPath = [dynamicLanguageGenerationResultsDictionary objectForKey:@"DictionaryPath"];
-		
-		NSLog(@"Dynamic language generator completed successfully, you can find your new files %@\n and \n%@\n at the paths \n%@ \nand \n%@", lmFile,dictionaryFile,lmPath,dictionaryPath);        
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dynamicLanguageGenerationResultsDictionary];
+  //       NSString *lmFile = [dynamicLanguageGenerationResultsDictionary objectForKey:@"LMFile"];
+		// NSString *dictionaryFile = [dynamicLanguageGenerationResultsDictionary objectForKey:@"DictionaryFile"];
+        // NSString *lmPath = [dynamicLanguageGenerationResultsDictionary objectForKey:@"LMPath"];
+        // NSString *dictionaryPath = [dynamicLanguageGenerationResultsDictionary objectForKey:@"DictionaryPath"];
+        NSString *dictionaryPath = [self.language_model_generator pathToSuccessfullyGeneratedDictionaryWithRequestedName:languageName];
+        NSString *lmPath = [self.language_model_generator pathToSuccessfullyGeneratedLanguageModelWithRequestedName:languageName];
+
+		// NSLog(@"Dynamic language generator completed successfully, you can find your new files %@\n and \n%@\n at the paths \n%@ \nand \n%@", lmFile,dictionaryFile,lmPath,dictionaryPath);        
+        // CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dynamicLanguageGenerationResultsDictionary];
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"OK"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         
         self.path_to_dynamic_language_model = lmPath;

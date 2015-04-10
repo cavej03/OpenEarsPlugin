@@ -12,38 +12,35 @@ but with function & Callback names normalised for portability.
 
 #import <Cordova/CDV.h>
 
-#import <OpenEars/AudioSessionManager.h>
-#import <OpenEars/PocketsphinxController.h>
-#import <OpenEars/OpenEarsEventsObserver.h>
-#import <OpenEars/FliteController.h>
-#import <OpenEars/LanguageModelGenerator.h>
-#import <OpenEars/OpenEarsLogging.h>
-#import <OpenEars/AcousticModel.h>
+#import <OpenEars/OEPocketsphinxController.h>
+#import <OpenEars/OEEventsObserver.h>
+#import <OpenEars/OEFliteController.h>
+#import <OpenEars/OELanguageModelGenerator.h>
+#import <OpenEars/OELogging.h>
+#import <OpenEars/OEAcousticModel.h>
 #import <Slt/Slt.h>
 
 
-@interface CDVOpenEars : CDVPlugin<OpenEarsEventsObserverDelegate> {
-	AudioSessionManager *audio_session_manager;
-	PocketsphinxController *pocket_sphinx_controller;
-	OpenEarsEventsObserver *openears_events_observer;
-	FliteController *flite_controller;
+@interface CDVOpenEars : CDVPlugin<OEEventsObserverDelegate> {
+	OEPocketsphinxController *pocket_sphinx_controller;
+	OEEventsObserver *openears_events_observer;
+	OEFliteController *flite_controller;
     Slt *slt;
-	LanguageModelGenerator *language_model_generator;
+	OELanguageModelGenerator *language_model_generator;
     
 	NSNumber *started_listening; // 1, 0 (yes, no)
-    NSString *acoustic_model;
+  NSString *acoustic_model;
 	NSString *current_language_model;
 	NSString *current_dictionary;
 	NSString *path_to_dynamic_language_model;
 	NSString *path_to_dynamic_grammar;
 }
 
-
-@property (nonatomic, strong) AudioSessionManager *audio_session_manager;
-@property (nonatomic, strong) PocketsphinxController *pocket_sphinx_controller;
-@property (nonatomic, strong) OpenEarsEventsObserver *openears_events_observer;
-@property (nonatomic, strong) LanguageModelGenerator *language_model_generator;
-@property (nonatomic, strong) FliteController *flite_controller;
+// @property (nonatomic, strong) AudioSessionManager *audio_session_manager
+@property (nonatomic, strong) OEPocketsphinxController *pocket_sphinx_controller;
+@property (nonatomic, strong) OEEventsObserver *openears_events_observer;
+@property (nonatomic, strong) OELanguageModelGenerator *language_model_generator;
+@property (nonatomic, strong) OEFliteController *flite_controller;
 @property (nonatomic, strong) Slt *slt;
 
 @property (nonatomic, strong) NSNumber *started_listening;
@@ -53,8 +50,6 @@ but with function & Callback names normalised for portability.
 @property (nonatomic, strong) NSString *path_to_dynamic_language_model;
 @property (nonatomic, strong) NSString *path_to_dynamic_grammar;
 
-
-- (void)startAudioSession:(CDVInvokedUrlCommand*)command;
 
 // Language Model Generator
 - (void)generateLanguageModel:(CDVInvokedUrlCommand*)command;
