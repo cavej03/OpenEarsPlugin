@@ -7,7 +7,7 @@ http://phonegap.com/
 
 Versions: OpenEars 2.03, for Codova 4.2
 
-## Fork
+### Fork
 
 This is a fork from https://github.com/karljacuncha/OpenEarsPlugin.
 
