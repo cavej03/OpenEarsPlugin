@@ -1,0 +1,27 @@
+{
+    "name": "nz.co.beweb.openearsplugin",
+    "version": "0.1.0",
+    "cordova_name": "OpenEarsPlugin",
+    "description": "Speech to text plugin",
+    "license": "Apache 2.0",
+    "keywords": [
+        "cordova",
+        "tts",
+        "text",
+        "speech"
+    ], 
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cavej03/OpenEarsPlugin.git"
+    },
+    "platforms": [
+        "ios"
+    ],
+    "engines": [
+        {
+            "name": "cordova",
+            "version": ">=3.1.0"
+        }
+    ],
+    "englishdoc": ""
+}

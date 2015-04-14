@@ -1,0 +1,8 @@
+{
+    "source":
+    {
+        "type":"git",
+        "url": "https://github.com/cavej03/OpenEarsPlugin.git",
+        "subdir":"."
+    }
+}        
