@@ -104,7 +104,7 @@
     NSString *languageName = [command.arguments objectAtIndex:0];
     NSString *languageCSV = [command.arguments objectAtIndex:1];
     NSArray *languageArray = [languageCSV componentsSeparatedByString:@","];
-    NSDictionary *languageDict = @{@"OneOfTheseWillBeSaidOnce": languageArray};
+    NSDictionary *languageDict = @{@"OneOfTheseCanBeSaidOnce": languageArray};
 
 
 
